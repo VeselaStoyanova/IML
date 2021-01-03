@@ -1,125 +1,134 @@
-#include "Stack.h"
+#include <iostream>
+#include <fstream>
+#include <stdio.h>
+#include <string>
+#include <sstream>
+#include "Tests.h"
 #include "Tag.h"
+#include "Parser.h"
+using namespace std;
 
-void testStack()
+Vector<string> getFileNames()
 {
-	Stack<char> firstStack;
-	firstStack.push('c');
-	firstStack.push('b');
-	firstStack.push('a');
-	firstStack.printStack();
-	firstStack.pop();
-	firstStack.pop();
-	firstStack.pop();
-	firstStack.printStack();
-}
+	Vector<string> fileNames;
+	string line;
+	getline(cin, line);
 
-void testClassTag()
-{
-	Tag firstTag = Tag();
-	Tag secondTag = Tag(Operation::AGG_AVG, "a12", { 1.1, 1.2, 1.3 });
-	cout << secondTag;
-
-	Tag thirdTag = secondTag;
-	cout << thirdTag;
-
-	Tag fourthTag = Tag(secondTag);
-	cout << fourthTag;
-}
-
-void printVector(vector<double> vector)
-{
-	for (int i = 0; i < vector.size(); i++)
+	istringstream iss(line);
+	string s;
+	while (getline(iss, s, ' '))
 	{
-		cout << vector[i] << " ";
+		fileNames.push_back(s.c_str());
 	}
-	cout << endl;
+
+	if (fileNames.length() != 2)
+	{
+		cout << "Wrong user input." << endl;
+	}
+
+	for (auto it = fileNames.begin(); it != fileNames.end(); ++it)
+	{
+		cout << *it << " ";
+	}
+
+	return fileNames;
 }
 
-void testFunctions()
+void testTags()
 {
-	double number = 4;
-	string firstArgument = "ASC";
-	string secondArgument = "DSC";
+	//testClassStack();
+	//testClassTag();
+	//testMapInc();
+	//testMapMlt();
+	//testAggSum();
+	//testAggPro();
+	//testAggAvg();
+	//testAggFst();
+	//testAggLst();
+	//testSrtRev();
+	//testSrtOrdAsc();
+	//testSrtOrdDsc();
+	//testSrtSlc();
+	//testSrtDst();
 
-	vector<double> numbers = { 1.0, 1.0, 3.0, 4.0, 5.0 };
-	printVector(numbers);
-	cout << endl;
+	Vector<double> firstVector;
+	firstVector.push_back(1);
+	firstVector.push_back(2);
+	firstVector.push_back(3);
 
-	Tag firstTag = Tag(Operation:: MAP_INC, "2", numbers);
-	vector<double> resultMapInc = firstTag.mapInc();
-	cout << "MAP-INC: " << endl;
-	printVector(resultMapInc);
-	cout << endl;
+	Tag firstTag = Tag(Operation::MAP_INC, "1", firstVector);
+	Tag secondTag = Tag(Operation::AGG_AVG, firstVector);
+	Tag thirdTag = Tag(Operation::SRT_ORD, "DSC", firstVector);
+	Tag fourthTag = Tag(Operation::SRT_REV, firstVector);
+	Tag fifthTag = Tag(Operation::SRT_SLC, "3", firstVector);
+	Tag sixthTag = Tag(Operation::SRT_DST, firstVector);
+	Tag seventhTag = Tag(Operation::SRT_ORD, "ASC", firstVector);
 
-	Tag secondTag = Tag(Operation::MAP_MLT, "2", numbers);
-	vector<double> resultMapMlt = secondTag.mapMlt();
-	cout << "MAP-MLT: " << endl;
-	printVector(resultMapMlt);
+	//printVector(firstTag.calculate());
+	//printVector(secondTag.calculate());
+	//printVector(thirdTag.calculate());
+	//printVector(fourthTag.calculate());
+	//printVector(fifthTag.calculate());
+	//printVector(sixthTag.calculate());
+	//printVector(seventhTag.calculate());
+	//firstTag.saveFile("newFile.txt");
+}
 
-	Tag thirdTag = Tag(Operation::AGG_SUM, numbers);
-	vector<double> resultAggSum = thirdTag.aggSum();
-	cout << "AGG-SUM: " << endl;
-	printVector(resultAggSum);
+void getUserInput()
+{
+	ifstream fs;
+	ofstream ft;
+	string str;
 
-	Tag fourthTag = Tag(Operation::AGG_PRO, numbers);
-	vector<double> resultAggPro = fourthTag.aggPro();
-	cout << "AGG-PRO: " << endl;
-	printVector(resultAggPro);
+	cout << "Enter Source File with Extension: ";
+	Vector<string> fileNames = getFileNames();
+	string sourcefile = fileNames[0];
+	string destinationfile = fileNames[1];
 
-	Tag fifthTag = Tag(Operation::AGG_AVG, numbers);
-	vector<double> resultAggAvg = fifthTag.aggAvg();
-	cout << "AGG-AVG: " << endl;
-	printVector(resultAggAvg);
+	fs.open(sourcefile);
+	if (!fs)
+	{
+		cout << "Error in opening source file...!!!";
+		exit(1);
+	}
 
-	Tag sixthTag = Tag(Operation::AGG_FST, numbers);
-	vector<double> resultAggFst = sixthTag.aggFst();
-	cout << "AGG-FST: " << endl;
-	printVector(resultAggFst);
+	ft.open(destinationfile);
+	if (!ft)
+	{
+		cout << "Error in opening destination file...!!!";
+		exit(2);
+	}
 
-	Tag seventhTag = Tag(Operation::AGG_LST, numbers);
-	vector<double> resultAggLst = seventhTag.aggLst();
-	cout << "AGG-LST: " << endl;
-	printVector(resultAggLst);
+	if (fs && ft)
+	{
+		stringstream buffer;
+		buffer << fs.rdbuf();
+		Parser p;
+		Vector<double> result = p.parseContent(buffer.str());
 
-	Tag eightTag = Tag(Operation::SRT_REV, numbers);
-	vector<double> resultSrtRev = eightTag.srtRev();
-	cout << "SRT-REV: " << endl;
-	printVector(resultSrtRev);
+		for (int i = 0; i < result.length(); i++)
+		{
+			ft << result[i] << " ";
+		}
 
-	Tag ninthTag = Tag(Operation::SRT_ORD, firstArgument, numbers);
-	vector<double> resultSrtOrdAsc = ninthTag.srtOrd();
-	cout << "SRT-ORD ASC: " << endl;
-	printVector(resultSrtOrdAsc);
+		cout << "Source file date successfully copied to destination file!!!";
+	}
 
+	else
+	{
+		cout << "File cannot open...!!!";
+	}
 
-	Tag tenthTag = Tag(Operation::SRT_ORD, secondArgument, numbers);
-	vector<double> resultSrtOrdDsc = tenthTag.srtOrd();
-	cout << "SRT-ORD DSC: " << endl;
-	printVector(resultSrtOrdDsc);
-
-	Tag eleventhTag = Tag(Operation::SRT_SLC, "2", numbers);
-	vector<double>resultSrtSlc = eleventhTag.srtSlc();
-	cout << "SRT-SLC: " << endl;
-	printVector(resultSrtSlc);
-
-	Tag twelfthTag = Tag(Operation::SRT_DST, numbers);
-	vector<double>resultSrtDst = twelfthTag.srtDst();
-	cout << "SRT-DST: " << endl;
-	printVector(resultSrtDst);
+	cout << endl << "Open destination file and check!!!";
+	fs.close();
+	ft.close();
 }
 
 int main()
 {
-	//testStack();
-	//testClassTag();
-	//testFunctions();
-	Tag firstTag = Tag(Operation::MAP_INC, "1", { 1.0, 2.0, 3.0 });
-	Tag secondTag = Tag(Operation::AGG_SUM, "1", { 1.0, 2.0, 3.0 });
-	Tag thirdTag = Tag(Operation::SRT_ORD, "DSC", { 4.0, 2.0, 3.0 });
-	//printVector(firstTag.calculate());
-	//printVector(secondTag.calculate());
-	printVector(thirdTag.calculate());
+	//testTags();
+	getUserInput();
+
 	return 0;
 }
 

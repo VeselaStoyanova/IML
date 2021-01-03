@@ -1,33 +1,25 @@
-#include "Operation.h"
+#include <iostream>
 #include <unordered_map>
-#include "Tag.h"
+#include "Operation.h"
 using namespace std;
 
-static unordered_map<string, Operation> const operationTable = 
+Operation switchOperation(string operationName)
 {
-	{"MAP-INC", Operation::MAP_INC},
-	{"MAP-MLT", Operation::MAP_MLT},
-	{"AGG-SUM", Operation::AGG_SUM},
-	{"AGG-PRO", Operation::AGG_PRO},
-	{"AGG-AVG", Operation::AGG_AVG},
-	{"AGG-FST", Operation::AGG_FST},
-	{"AGG-LST", Operation::AGG_LST},
-	{"SRT-REV", Operation::SRT_REV},
-	{"SRT-ORD", Operation::SRT_ORD},
-	{"SRT-SLC", Operation::SRT_SLC},
-	{"SRT-DST", Operation::SRT_DST} 
-};
+	auto pair = operationTable.find(operationName);
 
-Operation switchOperation(string operation)
-{
-	auto it = operationTable.find(operation);
-
-	if (it != operationTable.end()) 
+	if (pair != operationTable.end())
 	{
-		return it->second;
+		return pair->second;
 	}
+
 	else
 	{
-		cout << "Not a valid operation.";
+		cout << "Not a valid operation." << endl;
 	}
+}
+
+bool isOperationValid(string operationName)
+{
+	auto pair = operationTable.find(operationName);
+	return pair != operationTable.end();
 }

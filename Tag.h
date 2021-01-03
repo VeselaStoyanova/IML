@@ -1,44 +1,47 @@
 #pragma once
+#include "Vector.h"
 #include "Operation.h"
 using namespace std;
-
-#include <vector>
 
 class Tag
 {
 private:
 	Operation operation;
 	string argument;
-	vector<double> numbers;
+	Vector<double> numbers;
 	void copy(const Tag& other);
 
 public:
 	Tag();
-	Tag(Operation operation, string argument, vector<double> number);
-	Tag(Operation operation, vector<double> numbers);
+	Tag(Operation operation, string argument, Vector<double> number);
+	Tag(Operation operation, Vector<double> numbers);
 	Tag(const Tag& other);
 	Tag& operator=(const Tag& other);
 	bool operator==(const Tag& other);
 
-	friend ostream& operator<<(ostream& output, const Tag& tag);
-	void sortDsc(vector<double>& vector);
-	void bubbleSort(vector<double>& vector);
+	friend ostream& operator<<(ostream& output, Tag& tag);
+	friend istream& operator>>(istream& input, Tag& tag);
+
+	void sortAsc(Vector<double>& vector);
+	void sortDsc(Vector<double>& vector);
 	void remove();
 
-	vector<double> aggSum();
-	vector<double> aggPro();
-	vector<double> aggAvg();
-	vector<double> aggFst();
-	vector<double> aggLst();
+	Vector<double> mapInc();
+	Vector<double> mapMlt();
+	
+	Vector<double> aggSum();
+	Vector<double> aggPro();
+	Vector<double> aggAvg();
+	Vector<double> aggFst();
+	Vector<double> aggLst();
+	
+	Vector<double> srtRev();
+	Vector<double> srtOrd();
+	Vector<double> srtSlc();
+	Vector<double> srtDst();
 
-	vector<double> mapInc();
-	vector<double> mapMlt();
-
-	vector<double> srtRev();
-	vector<double> srtOrd();
-	vector<double> srtSlc();
-	vector<double> srtDst();
-
-	vector<double> calculate();
+	Vector<double> calculate();
+	
+	void addNumbers(Vector<double> newNumbers);
 };
 
