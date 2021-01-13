@@ -20,17 +20,17 @@ enum Operation
 
 static unordered_map<string, Operation> const operationTable =
 {
-	{"MAP-INC", Operation::MAP_INC},
-	{"MAP-MLT", Operation::MAP_MLT},
-	{"AGG-SUM", Operation::AGG_SUM},
-	{"AGG-PRO", Operation::AGG_PRO},
-	{"AGG-AVG", Operation::AGG_AVG},
-	{"AGG-FST", Operation::AGG_FST},
-	{"AGG-LST", Operation::AGG_LST},
-	{"SRT-REV", Operation::SRT_REV},
-	{"SRT-ORD", Operation::SRT_ORD},
-	{"SRT-SLC", Operation::SRT_SLC},
-	{"SRT-DST", Operation::SRT_DST}
+	{"MAP-INC", MAP_INC},
+	{"MAP-MLT", MAP_MLT},
+	{"AGG-SUM", AGG_SUM},
+	{"AGG-PRO", AGG_PRO},
+	{"AGG-AVG", AGG_AVG},
+	{"AGG-FST", AGG_FST},
+	{"AGG-LST", AGG_LST},
+	{"SRT-REV", SRT_REV},
+	{"SRT-ORD", SRT_ORD},
+	{"SRT-SLC", SRT_SLC},
+	{"SRT-DST", SRT_DST}
 };
 
 Operation switchOperation(string operationName);
