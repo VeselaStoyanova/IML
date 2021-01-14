@@ -116,7 +116,7 @@ public:
 			Node* holder = this->head->next;
 			if (holder != nullptr)
 			{
-				int data = holder->data;
+				T data = holder->data;
 				delete this->head;
 				this->head = holder;
 			}
@@ -135,7 +135,7 @@ public:
 	{
 		while (!this->empty())
 		{
-			cout << this->top();
+			cout << this->top() << " ";
 			this->pop();
 		}
 		cout << endl;

@@ -18,3 +18,4 @@ void testSrtOrdAsc();
 void testSrtOrdDsc();
 void testSrtSlc();
 void testSrtDst();
+void testTags();

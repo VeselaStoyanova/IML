@@ -4,7 +4,8 @@ double number = 4;
 string firstArgument = "ASC";
 string secondArgument = "DSC";
 
-Vector<double> createNumbers() {
+Vector<double> createNumbers() 
+{
 	Vector<double> numbers;
 	numbers.push_back(1);
 	numbers.push_back(2);
@@ -156,4 +157,44 @@ void testSrtDst()
 	Vector<double>resultSrtDst = twelfthTag.srtDst();
 	cout << "SRT-DST: " << endl;
 	printVector(resultSrtDst);
+}
+
+void testTags()
+{
+	//testClassStack();
+	//testClassTag();
+	//testMapInc();
+	//testMapMlt();
+	//testAggSum();
+	//testAggPro();
+	//testAggAvg();
+	//testAggFst();
+	//testAggLst();
+	//testSrtRev();
+	//testSrtOrdAsc();
+	//testSrtOrdDsc();
+	//testSrtSlc();
+	//testSrtDst();
+
+	Vector<double> firstVector;
+	firstVector.push_back(1);
+	firstVector.push_back(2);
+	firstVector.push_back(3);
+
+	Tag firstTag = Tag(Operation::MAP_INC, "1", firstVector);
+	Tag secondTag = Tag(Operation::AGG_AVG, firstVector);
+	Tag thirdTag = Tag(Operation::SRT_ORD, "DSC", firstVector);
+	Tag fourthTag = Tag(Operation::SRT_REV, firstVector);
+	Tag fifthTag = Tag(Operation::SRT_SLC, "3", firstVector);
+	Tag sixthTag = Tag(Operation::SRT_DST, firstVector);
+	Tag seventhTag = Tag(Operation::SRT_ORD, "ASC", firstVector);
+
+	//printVector(firstTag.calculate());
+	//printVector(secondTag.calculate());
+	//printVector(thirdTag.calculate());
+	//printVector(fourthTag.calculate());
+	//printVector(fifthTag.calculate());
+	//printVector(sixthTag.calculate());
+	//printVector(seventhTag.calculate());
+	//firstTag.saveFile("newFile.txt");
 }

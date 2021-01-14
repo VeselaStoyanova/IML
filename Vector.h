@@ -41,7 +41,8 @@ public:
 
 private:
 	T* data;
-	size_t size, capacity;
+	size_t size;
+	size_t capacity;
 
 	void copy(const Vector<T>& other)
 	{
@@ -58,7 +59,7 @@ private:
 
 	void resize()
 	{
-		this->capacity *= 2;
+		this->capacity = this->capacity * 2;
 		T* bigger_buffer = new T[this->capacity];
 
 		for (size_t i = 0; i < this->size; i++)
@@ -200,5 +201,15 @@ public:
 	Iterator end()
 	{
 		return Iterator(*this, this->size);
+	}
+
+	T last()
+	{
+		return this->data[size - 1];
+	}
+
+	T first()
+	{
+		return this->data[0];
 	}
 };

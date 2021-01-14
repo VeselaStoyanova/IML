@@ -1,10 +1,4 @@
-﻿#include<iostream>
-#include <algorithm>
-#include <string>
-#include <fstream>
-#include <cstdlib>
-#include "Tag.h"
-
+﻿#include "Tag.h"
 
 void Tag::copy(const Tag& other)
 {
@@ -56,6 +50,11 @@ bool Tag::operator==(const Tag& other)
 	return this->operation == other.operation &&
 		this->argument == other.argument &&
 		this->numbers == other.numbers;
+}
+
+Operation Tag::getOperation()
+{
+	return operation;
 }
 
 ostream& operator<<(ostream& output, Tag& tag)
@@ -116,62 +115,85 @@ void Tag::sortDsc(Vector<double>& vector)
 	}
 }
 
-//функция, която добавя елемент към всеки елемент от вектора
-Vector<double> Tag::mapInc()
-{
-	Vector<double> result;
-	double number = stod(this->argument); 
-
-	for (int i = 0; i < numbers.length(); i++)
-	{
-		result.push_back(numbers[i] + number);
-	}
-
-	return result;
-}
-
-//функция, която умножава всеки елемент от вектора с друг
-Vector<double> Tag::mapMlt()
+Vector<double> Tag::map(bool isOperationIncrease)
 {
 	Vector<double> result;
 	double number = stod(this->argument);
 
 	for (int i = 0; i < numbers.length(); i++)
 	{
-		result.push_back(numbers[i] * number);
+		double newElement;
+		if (isOperationIncrease)
+		{
+			newElement = numbers[i] + number;
+		}
+
+		else
+		{
+			newElement = numbers[i] * number;
+		}
+
+		result.push_back(newElement);
 	}
 
 	return result;
 }
 
-//функция, която намира сумата на елементите във вектора
-Vector<double> Tag::aggSum()
+//функция, която добавя елемент към всеки елемент от вектора
+Vector<double> Tag::mapInc()
+{
+	return map(true);
+}
+
+//функция, която умножава всеки елемент от вектора с друг
+Vector<double> Tag::mapMlt()
+{
+	return map(false);
+}
+
+Vector<double> Tag::agg(bool isOperationSum)
 {
 	Vector<double> sums;
-	double sum = 0;
+	double result;
+
+	if (isOperationSum)
+	{
+		result = 0;
+	}
+
+	else
+	{
+		result = 1;
+	}
 
 	for (int i = 0; i < numbers.length(); i++)
 	{
-		sum = sum + numbers[i];
-	}
 
-	sums.push_back(sum);
+		if (isOperationSum)
+		{
+			result = result + numbers[i];
+		}
+
+		else
+		{
+			result = result * numbers[i];
+		}
+	
+	}
+	sums.push_back(result);
 	return sums;
+}
+
+//функция, която намира сумата на елементите във вектора
+Vector<double> Tag::aggSum()
+{
+	return agg(true);
 }
 
 //функция, която намира произведението на елементите във вектора
 Vector<double> Tag::aggPro()
 {
-	Vector<double> pros;
-	double pro = 1;
-
-	for (int i = 0; i < numbers.length(); i++)
-	{
-		pro = pro * numbers[i];
-	}
-
-	pros.push_back(pro);
-	return pros;
+	return agg(false);
 }
 
 //функция, която намира средно-аритметичното на елементите във вектора
@@ -190,34 +212,57 @@ Vector<double> Tag::aggAvg()
 	return result;
 }
 
+Vector<double> Tag::aggEl(bool isOperationFst)
+{
+	Vector<double> result;
+	if (isOperationFst)
+	{
+		result.push_back(numbers.first());
+	}
+
+	else
+	{
+		result.push_back(numbers.last());
+	}
+	return result;
+}
+
 //функция, която намира първия елемент във вектора
 Vector<double> Tag::aggFst()
 {
-	Vector<double> result;
-	result.push_back(*numbers.begin());
-	return result;
+	return aggEl(true);
 }
 
 //функция, която намира последния елемент във вектора
 Vector<double> Tag::aggLst()
 {
-	Vector<double> result;
-	result.push_back(*numbers.end());
-	return result;
+	return aggEl(false);
+}
+
+Vector<double> Tag::reverseVector(Vector<double> vec)
+{
+	for (int i = 0; i < vec.length()/2; i++)
+	{
+		vec.swapValues(i, vec.length() - i - 1);
+	}
+
+	return vec;
 }
 
 //функция, която обръща вектора
 Vector<double> Tag::srtRev()
 {
 	Vector<double> result;
-	//reverse(numbers.begin(), numbers.end());
+	//reverseVector(result);
 
 	for (int i = 0; i < numbers.length(); i++)
 	{
 		result.push_back(numbers[i]);
 	}
 
-	return result;
+	Vector<double> vec1 = reverseVector(result);
+
+	return vec1;
 }
 
 //функция, която сортира вектора
@@ -225,31 +270,24 @@ Vector<double> Tag::srtOrd()
 {
 	Vector<double> result;
 
+	for (int i = 0; i < numbers.length(); i++)
+	{
+		result.push_back(numbers[i]);
+	}
+
 	//сортира вектора във възходящ ред
 	if (this->argument == "ASC")
 	{
-		Vector<double> result;
-		
-		for (int i = 0; i < numbers.length(); i++)
-		{
-			result.push_back(numbers[i]);
-		}
 		sortAsc(result);
-		return result;	
 	}
 
 	//сортира в низходящ ред
 	else if(this->argument == "DSC")
 	{
-		Vector<double> result;
-
-		for (int i = 0; i < numbers.length(); i++)
-		{
-			result.push_back(numbers[i]);
-		}
 		sortDsc(result);
-		return result;
 	}
+
+	return result;
 }
 
 //функция, която връща подсписък от посочения индекс нататък
@@ -265,30 +303,40 @@ Vector<double> Tag::srtSlc()
 	return result;
 }
 
-void Tag::remove()
+bool Tag::hasDuplicatesInInterval(Vector<double> vec, int left, int right, double value)
 {
-	auto end = numbers.end();
-
-	for (auto it = numbers.begin(); it != end; ++it)
+	for (int i = left; i <= right; i++)
 	{
-		//end = std::remove(it + 1, end, *it);
+		if (vec[i] == value)
+		{
+			return true;
+		}
+	}
+	return false;
+}
+
+Vector<double> Tag::removeDuplicates()
+{
+	Vector<double> result;
+
+	for (int i = 0; i < numbers.length(); i++)
+	{
+		if (!hasDuplicatesInInterval(numbers, 0, i - 1, numbers[i]))
+		{
+			result.push_back(numbers[i]);
+		}
 	}
 
-	//numbers.erase(end, numbers.end());
+	return result;
+
 }
 
 //функция, която премахва дубликати
 Vector<double> Tag::srtDst()
 {
-	Vector<double> result;
-	remove();
+	Vector<double> res = removeDuplicates();
 
-	for (auto it = numbers.begin(); it != numbers.end(); ++it)
-	{
-		result.push_back(*it);
-	}
-
-	return result;
+	return res;
 }
 
 //функция, която от подадена операция връща съответната функция
@@ -296,27 +344,27 @@ Vector<double> Tag::calculate()
 {
 	switch(this->operation)
 	{
-	case MAP_INC: return mapInc();
+	case Operation::MAP_INC: return mapInc();
 		break;
-	case MAP_MLT: return mapMlt();
+	case Operation::MAP_MLT: return mapMlt();
 		break;
-	case AGG_SUM: return aggSum();
+	case Operation::AGG_SUM: return aggSum();
 		break;
-	case AGG_PRO: return aggPro();
+	case Operation::AGG_PRO: return aggPro();
 		break;
-	case AGG_AVG: return aggAvg();
+	case Operation::AGG_AVG: return aggAvg();
 		break;
-	case AGG_FST: return aggFst();
+	case Operation::AGG_FST: return aggFst();
 		break;
-	case AGG_LST: return aggLst();
+	case Operation::AGG_LST: return aggLst();
 		break;
-	case SRT_REV: return srtRev();
+	case Operation::SRT_REV: return srtRev();
 		break;
-	case SRT_ORD: return srtOrd();
+	case Operation::SRT_ORD: return srtOrd();
 		break;
-	case SRT_SLC: return srtSlc();
+	case Operation::SRT_SLC: return srtSlc();
 		break;
-	case SRT_DST: return srtDst();
+	case Operation::SRT_DST: return srtDst();
 		break;
 	default: cout << "Invalid input";
 		break;

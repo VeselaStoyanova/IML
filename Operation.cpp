@@ -1,7 +1,4 @@
-#include <iostream>
-#include <unordered_map>
 #include "Operation.h"
-using namespace std;
 
 Operation switchOperation(string operationName)
 {

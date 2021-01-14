@@ -1,4 +1,9 @@
 #pragma once
+#include <iostream>
+#include <algorithm>
+#include <string>
+#include <fstream>
+#include <cstdlib>
 #include "Vector.h"
 #include "Operation.h"
 using namespace std;
@@ -19,19 +24,29 @@ public:
 	Tag& operator=(const Tag& other);
 	bool operator==(const Tag& other);
 
+	Operation getOperation();
+
 	friend ostream& operator<<(ostream& output, Tag& tag);
 	friend istream& operator>>(istream& input, Tag& tag);
 
 	void sortAsc(Vector<double>& vector);
 	void sortDsc(Vector<double>& vector);
-	void remove();
+	bool hasDuplicatesInInterval(Vector<double> vec, int left, int right, double value);
+
+	Vector<double> removeDuplicates();
+	Vector<double> reverseVector(Vector<double> vector);
+
+	Vector<double> map(bool isOperationIncrease);
 
 	Vector<double> mapInc();
 	Vector<double> mapMlt();
 	
+	Vector<double> agg(bool isOperationSum);
 	Vector<double> aggSum();
 	Vector<double> aggPro();
 	Vector<double> aggAvg();
+
+	Vector<double> aggEl(bool isOperationFst);
 	Vector<double> aggFst();
 	Vector<double> aggLst();
 	

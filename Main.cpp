@@ -26,52 +26,7 @@ Vector<string> getFileNames()
 		cout << "Wrong user input." << endl;
 	}
 
-	for (auto it = fileNames.begin(); it != fileNames.end(); ++it)
-	{
-		cout << *it << " ";
-	}
-
 	return fileNames;
-}
-
-void testTags()
-{
-	//testClassStack();
-	//testClassTag();
-	//testMapInc();
-	//testMapMlt();
-	//testAggSum();
-	//testAggPro();
-	//testAggAvg();
-	//testAggFst();
-	//testAggLst();
-	//testSrtRev();
-	//testSrtOrdAsc();
-	//testSrtOrdDsc();
-	//testSrtSlc();
-	//testSrtDst();
-
-	Vector<double> firstVector;
-	firstVector.push_back(1);
-	firstVector.push_back(2);
-	firstVector.push_back(3);
-
-	Tag firstTag = Tag(Operation::MAP_INC, "1", firstVector);
-	Tag secondTag = Tag(Operation::AGG_AVG, firstVector);
-	Tag thirdTag = Tag(Operation::SRT_ORD, "DSC", firstVector);
-	Tag fourthTag = Tag(Operation::SRT_REV, firstVector);
-	Tag fifthTag = Tag(Operation::SRT_SLC, "3", firstVector);
-	Tag sixthTag = Tag(Operation::SRT_DST, firstVector);
-	Tag seventhTag = Tag(Operation::SRT_ORD, "ASC", firstVector);
-
-	//printVector(firstTag.calculate());
-	//printVector(secondTag.calculate());
-	//printVector(thirdTag.calculate());
-	//printVector(fourthTag.calculate());
-	//printVector(fifthTag.calculate());
-	//printVector(sixthTag.calculate());
-	//printVector(seventhTag.calculate());
-	//firstTag.saveFile("newFile.txt");
 }
 
 void getUserInput()
@@ -80,7 +35,7 @@ void getUserInput()
 	ofstream ft;
 	string str;
 
-	cout << "Enter Source File with Extension: ";
+	cout << "Enter Source File and Destination File with Extensions: ";
 	Vector<string> fileNames = getFileNames();
 	string sourcefile = fileNames[0];
 	string destinationfile = fileNames[1];
@@ -88,14 +43,14 @@ void getUserInput()
 	fs.open(sourcefile);
 	if (!fs)
 	{
-		cout << "Error in opening source file...!!!";
+		cout << "Error in opening source file...!!!" << endl;
 		exit(1);
 	}
 
 	ft.open(destinationfile);
 	if (!ft)
 	{
-		cout << "Error in opening destination file...!!!";
+		cout << "Error in opening destination file...!!!" << endl;
 		exit(2);
 	}
 
@@ -110,23 +65,23 @@ void getUserInput()
 		{
 			ft << result[i] << " ";
 		}
-
-		cout << "Source file date successfully copied to destination file!!!";
+		
+		cout << endl;
+		cout << "Source file date successfully copied to destination file!!!" << endl;
 	}
 
 	else
 	{
-		cout << "File cannot open...!!!";
+		cout << "File cannot open...!!!" << endl;
 	}
 
-	cout << endl << "Open destination file and check!!!";
+	cout << endl << "Open destination file and check!!!" << endl;
 	fs.close();
 	ft.close();
 }
 
 int main()
 {
-	//testTags();
 	getUserInput();
 
 	return 0;
