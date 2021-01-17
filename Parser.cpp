@@ -21,7 +21,7 @@ Vector<double> Parser::parseContent(string content)
 	if (tagRows[0] != "") 
 	{
 		cout << "Input error. The file does not start with the symbol '<'" << endl;
-		return result;
+		exit(1);
 	}
 
 	tagRows.pop_front();			//Първият елемент е празен стринг и го изтриваме.
@@ -68,13 +68,15 @@ Vector<double> Parser::evaluateContent(Vector<string> tagRows)
 			if (tags.empty())
 			{
 				cout << "There is an additional closing tag." << endl;
-				return Vector<double>();
+				exit(1);
+				//return Vector<double>();
 			}
 			Tag lastTag = tags.top();
 			if (operation != lastTag.getOperation()) 
 			{
 				cout << "The closing tag is different from the opening tag." << endl;
-				return Vector<double>();
+				exit(1);
+				//return Vector<double>();
 			}
 
 			result = lastTag.calculate();
@@ -98,7 +100,8 @@ Vector<double> Parser::evaluateContent(Vector<string> tagRows)
 	if (!tags.empty())
 	{
 		cout << "The last closing tag is missing." << endl;
-		return Vector<double>();
+		exit(1);
+		//return Vector<double>();
 	}
 
 	return result;
@@ -132,11 +135,13 @@ string Parser::parseArgument(string operAndArgum, Operation operation)
 	if (needsArgument && !hasArgument)
 	{
 		cout << "The required argument for the operation " << operation << " is missing." << endl;
+		exit(1);
 	}
 
 	if (!needsArgument && hasArgument)
 	{
 		cout << "There is a redundant argument for the operation " << operation << " . " << endl;
+		exit(1);
 	}
 
 	if (needsArgument && hasArgument)
@@ -149,11 +154,15 @@ string Parser::parseArgument(string operAndArgum, Operation operation)
 	return "";
 }
 
-bool is_number(const std::string& s)
+bool is_number(const string& s)
 {
-	std::string::const_iterator it = s.begin();
-	while (it != s.end() && std::isdigit(*it)) ++it;
-	return !s.empty() && it == s.end();
+	char* endptr = 0;
+	const char* c = s.c_str();
+	strtod(c, &endptr);
+
+	if (*endptr != '\0' || endptr == c)
+		return false;
+	return true;
 }
 
 Vector<double> Parser::parseNumbers(string numbersStr)
@@ -178,6 +187,7 @@ Vector<double> Parser::parseNumbers(string numbersStr)
 		else
 		{
 			cout << "A not valid digit occurred." << endl;
+			exit(1);
 		}
 	}
 
