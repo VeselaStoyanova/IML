@@ -253,7 +253,6 @@ Vector<double> Tag::reverseVector(Vector<double> vec)
 Vector<double> Tag::srtRev()
 {
 	Vector<double> result;
-	//reverseVector(result);
 
 	for (int i = 0; i < numbers.length(); i++)
 	{
@@ -294,7 +293,7 @@ Vector<double> Tag::srtOrd()
 Vector<double> Tag::srtSlc()
 {
 	Vector<double> result;
-	double number = stoi(this->argument);
+	double number = stod(this->argument);
 	for (int i = number; i < numbers.length(); i++)
 	{
 		result.push_back(numbers[i]);

@@ -24,7 +24,8 @@ Vector<double> Parser::parseContent(string content)
 		exit(1);
 	}
 
-	tagRows.pop_front();			//Първият елемент е празен стринг и го изтриваме.
+	//Първият елемент е празен стринг и го изтриваме.
+	tagRows.pop_front();			
 	result = evaluateContent(tagRows);
 	return result;
 }
@@ -65,26 +66,30 @@ Vector<double> Parser::evaluateContent(Vector<string> tagRows)
 
 		if (isClosingTag)
 		{
+			//Проверяваме дали имаме затварящ таг, но стекът от тагове е празен
 			if (tags.empty())
 			{
 				cout << "There is an additional closing tag." << endl;
 				exit(1);
-				//return Vector<double>();
 			}
 			Tag lastTag = tags.top();
+			//Проверяваме дали операцията на затварящия таг е различна от тази на отварящия 
 			if (operation != lastTag.getOperation()) 
 			{
 				cout << "The closing tag is different from the opening tag." << endl;
 				exit(1);
-				//return Vector<double>();
 			}
 
+			//Взимаме най-горния елемент на стека и го пресмятаме
 			result = lastTag.calculate();
+			//После pop-ваме горния елемент
 			tags.pop();
+			//Проверяваме дали имаме още елементи в стека
 			if (!tags.empty())
 			{
 				Tag newLastTag = tags.top();
 				tags.pop();
+				//Добавяме полученият до момента резултат
 				newLastTag.addNumbers(result);
 				newLastTag.addNumbers(numbers);
 				tags.push(newLastTag);
@@ -97,11 +102,11 @@ Vector<double> Parser::evaluateContent(Vector<string> tagRows)
 		}
 	}
 
+	//Проверяваме дали имаме още елементи в стека, като вече сме стигнали до края на файла
 	if (!tags.empty())
 	{
 		cout << "The last closing tag is missing." << endl;
 		exit(1);
-		//return Vector<double>();
 	}
 
 	return result;
@@ -125,6 +130,7 @@ Operation Parser::parseOperation(string operAndArgum)
 
 string Parser::parseArgument(string operAndArgum, Operation operation)
 {
+	//Проверяваме дали функциите, които трябва да имат аргумент, го имат
 	bool needsArgument = operation == MAP_INC || operation == MAP_MLT || operation == SRT_ORD || operation == SRT_SLC;
 
 	istringstream iss(operAndArgum);
@@ -132,18 +138,21 @@ string Parser::parseArgument(string operAndArgum, Operation operation)
 	
 	bool hasArgument = components.length() > 1;
 
+	//Проверка, ако трябва да има аргумент, но няма
 	if (needsArgument && !hasArgument)
 	{
 		cout << "The required argument for the operation " << operation << " is missing." << endl;
 		exit(1);
 	}
 
+	//Проверка, ако не трябва да има аргумент, но има
 	if (!needsArgument && hasArgument)
 	{
 		cout << "There is a redundant argument for the operation " << operation << " . " << endl;
 		exit(1);
 	}
 
+	//Проверка, ако трябва да има аргумент и има
 	if (needsArgument && hasArgument)
 	{
 		string argument = components[1];
@@ -161,7 +170,9 @@ bool is_number(const string& s)
 	strtod(c, &endptr);
 
 	if (*endptr != '\0' || endptr == c)
+	{
 		return false;
+	}
 	return true;
 }
 
@@ -173,7 +184,7 @@ Vector<double> Parser::parseNumbers(string numbersStr)
 	Vector<double> result;
 	for (int i = 0; i < components.length(); i++)
 	{
-
+		//Проверяваме дали векторът се състои само от числа
 		if (is_number(components[i]))
 		{
 			result.push_back(stod(components[i]));
